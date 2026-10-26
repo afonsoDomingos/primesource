@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.primesource.co.mz/sitemap.xml
+Sitemap: https://www.primesourceps.co.mz/sitemap.xml

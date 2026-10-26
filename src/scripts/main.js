@@ -355,7 +355,7 @@ function initRfqForm() {
       `*Descrição:* ${descricao}\n` +
       (equipamentos ? `*Equipamentos/Serviços:* ${equipamentos}\n` : '') +
       (quantidade ? `*Quantidade:* ${quantidade}\n` : '') +
-      `\n_Enviado através do website oficial primesource.co.mz_`
+      `\n_Enviado através do website oficial primesourceps.co.mz_`
     );
 
     if (modalWhatsappLink) {
@@ -380,7 +380,7 @@ function initRfqForm() {
     );
 
     if (modalEmailLink) {
-      modalEmailLink.href = `mailto:info@primesource.co.mz?subject=${emailSubject}&body=${emailBody}`;
+      modalEmailLink.href = `mailto:info@primesourceps.co.mz?subject=${emailSubject}&body=${emailBody}`;
     }
 
     // Download summary function
@@ -412,8 +412,8 @@ ${equipamentos || 'Ver descrição ou anexo fornecido.'}
 - Quantidade Estimada: ${quantidade || 'Conforme especificação técnica'}
 
 CONTACTOS PRIMESOURCE:
-Website: https://www.primesource.co.mz/
-Email: info@primesource.co.mz
+Website: https://www.primesourceps.co.mz/
+Email: info@primesourceps.co.mz
 Telefones: +258 84 331 8434 / +258 84 700 8172
 Maputo, Moçambique
 =============================================================`;

@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const companySchema = new mongoose.Schema({
   nome: { type: String, required: true },
   pais: { type: String, default: 'Moçambique' },
-  website: { type: String, default: 'https://www.primesource.co.mz/' },
-  email: { type: String, default: 'info@primesource.co.mz' },
+  website: { type: String, default: 'https://www.primesourceps.co.mz/' },
+  email: { type: String, default: 'info@primesourceps.co.mz' },
   telefones: [{ type: String }],
   whatsapp: [{ type: String }],
   descricao_institucional: { type: String, required: true },

@@ -14,8 +14,8 @@ async function seedDatabase() {
   await Company.create({
     nome: 'PrimeSource Procurement and Services',
     pais: 'Moçambique',
-    website: 'https://www.primesource.co.mz/',
-    email: 'info@primesource.co.mz',
+    website: 'https://www.primesourceps.co.mz/',
+    email: 'info@primesourceps.co.mz',
     telefones: ['+258 84 331 8434', '+258 84 700 8172'],
     whatsapp: ['+258 84 331 8434', '+258 84 700 8172'],
     descricao_institucional: 'A PrimeSource Procurement and Services é uma empresa moçambicana especializada em procurement, fornecimento de materiais e equipamentos industriais, eléctricos, de automação, instrumentação, comunicação e segurança.',

@@ -8,8 +8,8 @@ Website corporativo moderno, responsivo e funcional integrado a base de dados **
 
 - **Empresa:** PrimeSource Procurement and Services
 - **País de Actuação:** Moçambique (Atendimento Nacional)
-- **Website Oficial:** [https://www.primesource.co.mz/](https://www.primesource.co.mz/)
-- **Email:** [info@primesource.co.mz](mailto:info@primesource.co.mz)
+- **Website Oficial:** [https://www.primesourceps.co.mz/](https://www.primesourceps.co.mz/)
+- **Email:** [info@primesourceps.co.mz](mailto:info@primesourceps.co.mz)
 - **Contactos Telefónicos:**
   - `+258 84 331 8434`
   - `+258 84 700 8172`
