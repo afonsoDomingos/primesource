@@ -18,9 +18,15 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
-connectDB().catch(err => {
-  console.error('[Server] Falha inicial ao ligar ao MongoDB:', err.message);
+// Serverless-ready MongoDB connection middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('[MongoDB] Middleware de ligação falhou:', error.message);
+    res.status(500).json({ error: 'Erro ao ligar à base de dados MongoDB Atlas.' });
+  }
 });
 
 /* ==========================================================================
@@ -166,15 +172,19 @@ app.get('/api/quotes', async (req, res) => {
   }
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 [Server] PrimeSource API operacional na porta ${PORT}`);
-  console.log(`📍 Endpoints disponíveis:`);
-  console.log(`   - GET  http://localhost:${PORT}/api/health`);
-  console.log(`   - GET  http://localhost:${PORT}/api/company`);
-  console.log(`   - GET  http://localhost:${PORT}/api/services`);
-  console.log(`   - GET  http://localhost:${PORT}/api/pillars`);
-  console.log(`   - GET  http://localhost:${PORT}/api/sectors`);
-  console.log(`   - POST http://localhost:${PORT}/api/quotes`);
-  console.log(`   - GET  http://localhost:${PORT}/api/quotes`);
-});
+// Start Server locally if not running as serverless function (Vercel)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 [Server] PrimeSource API operacional na porta ${PORT}`);
+    console.log(`📍 Endpoints disponíveis:`);
+    console.log(`   - GET  http://localhost:${PORT}/api/health`);
+    console.log(`   - GET  http://localhost:${PORT}/api/company`);
+    console.log(`   - GET  http://localhost:${PORT}/api/services`);
+    console.log(`   - GET  http://localhost:${PORT}/api/pillars`);
+    console.log(`   - GET  http://localhost:${PORT}/api/sectors`);
+    console.log(`   - POST http://localhost:${PORT}/api/quotes`);
+    console.log(`   - GET  http://localhost:${PORT}/api/quotes`);
+  });
+}
+
+export default app;

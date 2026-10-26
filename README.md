@@ -51,7 +51,28 @@ O servidor backend Express disponibiliza os seguintes endpoints:
 
 ---
 
-## 🛠️ Comandos de Execução
+## 🚀 Deploy no Vercel (Passo a Passo)
+
+O projecto está pré-configurado com [`vercel.json`](./vercel.json) e funções Serverless em [`api/index.js`](./api/index.js) para servir tanto o frontend estático optimizado como a API conectada ao MongoDB Atlas.
+
+### Como fazer o deploy:
+1. Aceda a [https://vercel.com/](https://vercel.com/) e inicie sessão com a sua conta GitHub.
+2. Clique em **"Add New..."** &rarr; **"Project"**.
+3. Seleccione o repositório **`afonsoDomingos/primesource`**.
+4. O Vercel detectará automaticamente as configurações de build a partir de `vercel.json`:
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+5. Na secção **Environment Variables** (Variáveis de Ambiente), adicione a variável:
+   - **Nome:** `MONGODB_URI`
+   - **Valor:** `mongodb+srv://karinganastudio23:VIbemongodb@cluster0.oe0akin.mongodb.net/primesourcedb?retryWrites=true&w=majority`
+6. Clique em **"Deploy"**.
+
+Em menos de 1 minuto o website e todos os endpoints de pedidos de cotação estarão online com HTTPS gratuito e CDN global!
+
+---
+
+## 🛠️ Comandos de Execução Local
 
 ```bash
 # 1. Instalar dependências
