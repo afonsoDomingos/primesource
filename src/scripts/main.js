@@ -250,7 +250,7 @@ function initRfqForm() {
   }
 
   // Form Submit Handler
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Check spam honeypot
@@ -282,73 +282,118 @@ function initRfqForm() {
       <svg class="spinner" width="20" height="20" viewBox="0 0 50 50" style="animation: spin 1s linear infinite;">
         <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="80" stroke-dashoffset="60"></circle>
       </svg>
-      A processar o pedido...
+      A registar na base de dados...
     `;
 
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalBtnText;
+    // Send to MongoDB API
+    const quotePayload = {
+      nome,
+      empresa,
+      email,
+      telefone,
+      area,
+      descricao,
+      equipamentos,
+      quantidade,
+      ficheiro_nome: fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0].name : '',
+      website_url_check: honeypot ? honeypot.value : ''
+    };
 
-      // Populate Success Modal Summary
-      const summaryNome = document.getElementById('modalSummaryNome');
-      const summaryEmpresa = document.getElementById('modalSummaryEmpresa');
-      const summaryArea = document.getElementById('modalSummaryArea');
-      const modalWhatsappLink = document.getElementById('modalWhatsappAction');
-      const modalEmailLink = document.getElementById('modalEmailAction');
-      const modalDownloadBtn = document.getElementById('modalDownloadAction');
+    let mongoQuoteId = null;
 
-      if (summaryNome) summaryNome.textContent = nome;
-      if (summaryEmpresa) summaryEmpresa.textContent = empresa;
-      if (summaryArea) summaryArea.textContent = area;
+    try {
+      // Try /api/quotes or direct port 5000 fallback
+      const apiUrl = window.location.port === '3000' ? '/api/quotes' : (window.location.origin + '/api/quotes');
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(quotePayload)
+      }).catch(() => {
+        // Fallback directly to localhost:5050 if running in local dev without proxy
+        return fetch('http://localhost:5050/api/quotes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(quotePayload)
+        });
+      });
 
-      // Prepare WhatsApp message
-      const whatsappMsg = encodeURIComponent(
-        `*PEDIDO DE COTAÇÃO - PRIMESOURCE PROCUREMENT*\n\n` +
-        `*Nome:* ${nome}\n` +
-        `*Empresa:* ${empresa}\n` +
-        `*Email:* ${email}\n` +
-        `*Telefone:* ${telefone}\n` +
-        `*Área de Interesse:* ${area}\n` +
-        `*Descrição:* ${descricao}\n` +
-        (equipamentos ? `*Equipamentos/Serviços:* ${equipamentos}\n` : '') +
-        (quantidade ? `*Quantidade:* ${quantidade}\n` : '') +
-        `\n_Enviado através do website oficial primesource.co.mz_`
-      );
-
-      if (modalWhatsappLink) {
-        modalWhatsappLink.href = `https://wa.me/258843318434?text=${whatsappMsg}`;
+      if (response && response.ok) {
+        const data = await response.json();
+        if (data.quoteId) {
+          mongoQuoteId = data.quoteId;
+          console.log('[MongoDB] Pedido registado com ID:', mongoQuoteId);
+        }
       }
+    } catch (err) {
+      console.warn('[MongoDB] Registo offline/fallback:', err.message);
+    }
 
-      // Prepare Mailto link
-      const emailSubject = encodeURIComponent(`Solicitação de Cotação - ${empresa} (${area})`);
-      const emailBody = encodeURIComponent(
-        `Prezada equipa PrimeSource Procurement and Services,\n\n` +
-        `Gostaria de solicitar uma cotação formal com os seguintes dados:\n\n` +
-        `Nome do Contacto: ${nome}\n` +
-        `Empresa / Instituição: ${empresa}\n` +
-        `Email: ${email}\n` +
-        `Telefone: ${telefone}\n` +
-        `Área de Interesse: ${area}\n` +
-        `Descrição da Necessidade:\n${descricao}\n\n` +
-        `Lista de Equipamentos / Serviços:\n${equipamentos}\n` +
-        (quantidade ? `Quantidade: ${quantidade}\n\n` : '\n') +
-        `Cumprimentos,\n${nome}\n${empresa}`
-      );
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnText;
 
-      if (modalEmailLink) {
-        modalEmailLink.href = `mailto:info@primesource.co.mz?subject=${emailSubject}&body=${emailBody}`;
-      }
+    // Populate Success Modal Summary
+    const summaryNome = document.getElementById('modalSummaryNome');
+    const summaryEmpresa = document.getElementById('modalSummaryEmpresa');
+    const summaryArea = document.getElementById('modalSummaryArea');
+    const modalWhatsappLink = document.getElementById('modalWhatsappAction');
+    const modalEmailLink = document.getElementById('modalEmailAction');
+    const modalDownloadBtn = document.getElementById('modalDownloadAction');
 
-      // Download summary function
-      if (modalDownloadBtn) {
-        modalDownloadBtn.onclick = () => {
-          const dossier = 
+    if (summaryNome) summaryNome.textContent = nome;
+    if (summaryEmpresa) summaryEmpresa.textContent = empresa;
+    if (summaryArea) summaryArea.textContent = `${area} ${mongoQuoteId ? `(Ref. MongoDB: #${mongoQuoteId.slice(-6)})` : ''}`;
+
+    // Prepare WhatsApp message
+    const whatsappMsg = encodeURIComponent(
+      `*PEDIDO DE COTAÇÃO - PRIMESOURCE PROCUREMENT*\n\n` +
+      (mongoQuoteId ? `*Ref. Registo:* ${mongoQuoteId}\n` : '') +
+      `*Nome:* ${nome}\n` +
+      `*Empresa:* ${empresa}\n` +
+      `*Email:* ${email}\n` +
+      `*Telefone:* ${telefone}\n` +
+      `*Área de Interesse:* ${area}\n` +
+      `*Descrição:* ${descricao}\n` +
+      (equipamentos ? `*Equipamentos/Serviços:* ${equipamentos}\n` : '') +
+      (quantidade ? `*Quantidade:* ${quantidade}\n` : '') +
+      `\n_Enviado através do website oficial primesource.co.mz_`
+    );
+
+    if (modalWhatsappLink) {
+      modalWhatsappLink.href = `https://wa.me/258843318434?text=${whatsappMsg}`;
+    }
+
+    // Prepare Mailto link
+    const emailSubject = encodeURIComponent(`Solicitação de Cotação - ${empresa} (${area}) ${mongoQuoteId ? `[Ref: ${mongoQuoteId.slice(-6)}]` : ''}`);
+    const emailBody = encodeURIComponent(
+      `Prezada equipa PrimeSource Procurement and Services,\n\n` +
+      `Gostaria de solicitar uma cotação formal com os seguintes dados:\n\n` +
+      (mongoQuoteId ? `Referência do Sistema: ${mongoQuoteId}\n` : '') +
+      `Nome do Contacto: ${nome}\n` +
+      `Empresa / Instituição: ${empresa}\n` +
+      `Email: ${email}\n` +
+      `Telefone: ${telefone}\n` +
+      `Área de Interesse: ${area}\n` +
+      `Descrição da Necessidade:\n${descricao}\n\n` +
+      `Lista de Equipamentos / Serviços:\n${equipamentos}\n` +
+      (quantidade ? `Quantidade: ${quantidade}\n\n` : '\n') +
+      `Cumprimentos,\n${nome}\n${empresa}`
+    );
+
+    if (modalEmailLink) {
+      modalEmailLink.href = `mailto:info@primesource.co.mz?subject=${emailSubject}&body=${emailBody}`;
+    }
+
+    // Download summary function
+    if (modalDownloadBtn) {
+      modalDownloadBtn.onclick = () => {
+        const refCode = mongoQuoteId || `PS-RFQ-${Date.now().toString().slice(-6)}`;
+        const dossier = 
 `=============================================================
 PRIMESOURCE PROCUREMENT AND SERVICES
 RESUMO DE SOLICITAÇÃO DE COTAÇÃO / REQUISIÇÃO
 =============================================================
 Data: ${new Date().toLocaleString('pt-MZ')}
-Referência do Website: PS-RFQ-${Date.now().toString().slice(-6)}
+Referência do Sistema (MongoDB): ${refCode}
 
 DADOS DO SOLICITANTE:
 - Nome Completo: ${nome}
@@ -372,29 +417,27 @@ Email: info@primesource.co.mz
 Telefones: +258 84 331 8434 / +258 84 700 8172
 Maputo, Moçambique
 =============================================================`;
-          const blob = new Blob([dossier], { type: 'text/plain;charset=utf-8' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `PrimeSource_Cotacao_${empresa.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        };
-      }
+        const blob = new Blob([dossier], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `PrimeSource_Cotacao_${empresa.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      };
+    }
 
-      // Show modal
-      if (modal) {
-        modal.classList.add('is-active');
-      }
+    // Show modal
+    if (modal) {
+      modal.classList.add('is-active');
+    }
 
-      // Reset form
-      form.reset();
-      if (filePreview) filePreview.style.display = 'none';
-      if (fileDropzone) fileDropzone.style.display = 'block';
-
-    }, 800);
+    // Reset form
+    form.reset();
+    if (filePreview) filePreview.style.display = 'none';
+    if (fileDropzone) fileDropzone.style.display = 'block';
   });
 
   // Modal Close Handlers

@@ -1,6 +1,6 @@
-# PrimeSource Procurement and Services — Website Corporativo Oficial
+# PrimeSource Procurement and Services — Website Corporativo Oficial & Backend API
 
-Website corporativo moderno, responsivo e de elevado padrão visual desenvolvido para a **PrimeSource Procurement and Services**, empresa moçambicana especializada em procurement, fornecimento de equipamentos industriais, materiais eléctricos, automação, instrumentação, conectividade e sistemas de segurança.
+Website corporativo moderno, responsivo e funcional integrado a base de dados **MongoDB Atlas** para a empresa **PrimeSource Procurement and Services**, Moçambique.
 
 ---
 
@@ -16,88 +16,68 @@ Website corporativo moderno, responsivo e de elevado padrão visual desenvolvido
 
 ---
 
-## 📁 Estrutura de Páginas
+## 🗄️ Integração com MongoDB Atlas
 
-1. **Início (`index.html`)**:
-   - Barra superior com canais directos (Moçambique, Telefones, Email e WhatsApp).
-   - Cabeçalho fixo com o logótipo oficial de alta resolução e menu responsivo.
-   - Hero Section com fotografia industrial real e badge institucional.
-   - Barra de 4 indicadores técnicos (Procurement Global, Redes Eléctricas, Automação & PLCs, Serviços Técnicos).
-   - Apresentação Institucional detalhada ("Soluções que impulsionam operações").
-   - Grelha das 9 áreas de negócio com fotografias reais e cartões interactivos.
-   - Os 4 Pilares da PrimeSource (Qualidade, Compromisso, Competência, Soluções Integradas).
-   - Compromisso Corporativo e Parceria ("O sucesso constrói-se em parceria").
-   - Chamada para Acção (CTA) e Rodapé completo.
+A base de dados oficial está configurada no cluster MongoDB Atlas (`cluster0.oe0akin.mongodb.net`) sob a base de dados **`primesourcedb`**.
 
-2. **Sobre Nós (`sobre.html`)**:
-   - Perfil Institucional detalhado.
-   - Objecto Principal completo da empresa com enquadramento comercial.
-   - Missão, Visão e Valores com cartões de prestígio.
-   - Compromisso com os Clientes e garantia operacional.
-
-3. **Serviços e Áreas de Actuação (`servicos.html`)**:
-   - Barra de salto rápido (Jump Nav) entre as 9 áreas.
-   - Apresentação técnica exaustiva de cada uma das 9 áreas:
-     1. Procurement e fornecimento de bens e equipamentos
-     2. Comércio de material industrial
-     3. Comércio de material eléctrico
-     4. Automação e instrumentação industrial
-     5. Sistemas de segurança electrónica
-     6. Sistemas de protecção e segurança perimetral
-     7. Equipamentos de comunicação e conectividade
-     8. Comércio externo
-     9. Serviços técnicos especializados
-   - Botões "Solicitar Orçamento" que auto-seleccionam a respectiva área no formulário.
-
-4. **Sectores e Equipamentos (`sectores.html`)**:
-   - Visão estruturada dos sectores industriais e linhas de equipamento atendidas (Redes Eléctricas, Mineração, Automação, Perímetros, Redes).
-
-5. **Contactos e Pedidos de Orçamento (`contactos.html`)**:
-   - Cartões de contacto com botões de chamada directa (`tel:`), email (`mailto:`) e WhatsApp para ambos os números.
-   - Formulário de cotação completo: Nome, Empresa, Email, Telefone, Área técnica, Descrição da necessidade, Equipamentos, Quantidade e Anexo de ficheiros (BOQ, Caderno de Encargos).
-   - Protecção anti-spam honeypot.
-   - Modal de confirmação inteligente com envio directo para WhatsApp, Email e download de resumo em formato texto (`.txt`).
-
-6. **Página 404 (`404.html`)**:
-   - Design corporativo com retorno guiado para a navegação principal.
-
-7. **Política de Privacidade (`politica-privacidade.html`)**:
-   - Termos de confidencialidade e protecção de dados comerciais e técnicos.
+### Colecções no MongoDB (`primesourcedb`):
+1. **`company`**:
+   - Informações institucionais da PrimeSource, missão, visão, valores, objecto legal e capacidade em redes eléctricas e transformadores.
+2. **`services`**:
+   - As 9 áreas de actuação completas com descrições técnicas e listas de produtos/serviços extraídas do portfólio oficial.
+3. **`pillars`**:
+   - Os 4 pilares: Qualidade, Compromisso, Competência e Soluções Integradas.
+4. **`sectors`**:
+   - Os sectores industriais (Redes Eléctricas, Mineração, Automação, Perímetros, Redes).
+5. **`pedidos_orcamento` (Quotes)**:
+   - Colecção que armazena em tempo real todos os pedidos de cotação (RFQ) submetidos através do website corporativo, incluindo nome, empresa, contacto telefónico, email, área técnica, lista de equipamentos, descrição e carimbo temporal.
 
 ---
 
-## 🛠️ Tecnologias & Arquitectura
+## 🚀 API RESTful (Porta 5050)
 
-- **Motor de Bundling:** [Vite](https://vitejs.dev/) para compilação ultrarrápida.
-- **Estrutura:** HTML5 Semântico, WCAG 2.1 Acessibilidade, Meta Tags OpenGraph e Schema.org JSON-LD.
-- **Estilo:** CSS Moderno Puro (Vanilla CSS com Design Tokens, Glassmorphism, CSS Grid e Flexbox, tipografia responsiva).
-- **Fontes:** Google Fonts (`Plus Jakarta Sans` e `Outfit`).
-- **SEO:** `sitemap.xml`, `robots.txt`, hierarquia semântica H1-H3, tags canónicas e Open Graph.
+O servidor backend Express disponibiliza os seguintes endpoints:
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `GET` | `/api/health` | Estado do servidor e verificação da ligação MongoDB |
+| `GET` | `/api/company` | Dados institucionais oficiais da PrimeSource |
+| `GET` | `/api/services` | Lista das 9 áreas de actuação e fornecimento |
+| `GET` | `/api/services/:identifier` | Consulta de serviço por slug ou número |
+| `GET` | `/api/pillars` | Os 4 pilares institucionais |
+| `GET` | `/api/sectors` | Sectores industriais atendidos |
+| `POST` | `/api/quotes` | Grava um novo pedido de cotação no MongoDB Atlas |
+| `GET` | `/api/quotes` | Consulta os pedidos de cotação registados |
 
 ---
 
-## 🚀 Comandos de Desenvolvimento e Produção
+## 🛠️ Comandos de Execução
 
 ```bash
-# Instalar dependências
+# 1. Instalar dependências
 npm install
 
-# Iniciar servidor de desenvolvimento local
+# 2. Povoar / Actualizar a base de dados MongoDB com os dados do portfólio
+npm run seed
+
+# 3. Iniciar o servidor backend API (Express + MongoDB) na porta 5050
+npm run server
+
+# 4. Iniciar o servidor de desenvolvimento frontend (Vite com proxy automático /api)
 npm run dev
 
-# Compilar para produção (cria pasta /dist)
+# 5. Compilar o frontend para produção (pasta /dist)
 npm run build
-
-# Testar o pacote de produção compilado
-npm run preview
 ```
 
 ---
 
-## 🌐 Publicação em Produção
+## 🔐 Configuração de Ambiente (.env)
 
-Para publicar no domínio oficial [https://www.primesource.co.mz/](https://www.primesource.co.mz/):
-1. Execute `npm run build`.
-2. Carregue o conteúdo gerado dentro da pasta `dist/` para a raiz do seu servidor web (ex: `public_html/` no cPanel, Nginx ou Apache).
-3. Para integração automatizada de email no formulário:
-   - Configure as credenciais SMTP no servidor ou aponte o endpoint `fetch()` em `src/scripts/main.js` para a API / webhook de sua preferência (ex: Resend, Formspree, Sendgrid ou script PHP Mailer local).
+Crie ou edite o ficheiro `.env` na raiz do projecto com a seguinte estrutura:
+
+```env
+MONGODB_URI=mongodb+srv://karinganastudio23:VIbemongodb@cluster0.oe0akin.mongodb.net/primesourcedb?retryWrites=true&w=majority
+PORT=5050
+NODE_ENV=development
+```
