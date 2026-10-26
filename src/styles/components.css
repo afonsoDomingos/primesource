@@ -1044,6 +1044,11 @@
   max-width: 800px;
 }
 
+.inner-hero h1,
+.inner-hero h2 {
+  color: var(--white) !important;
+}
+
 .breadcrumbs {
   display: flex;
   align-items: center;
@@ -1620,11 +1625,45 @@
 
 .footer-bottom-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .footer-bottom-links a:hover {
   color: var(--gold-400);
+}
+
+.powered-by-wehosthere {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--slate-400);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.powered-by-wehosthere:hover {
+  color: var(--white);
+  border-color: rgba(196, 144, 51, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.powered-by-wehosthere .wehosthere-logo {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+  transition: transform var(--transition-fast);
+}
+
+.powered-by-wehosthere:hover .wehosthere-logo {
+  transform: scale(1.08);
 }
 
 /* ==========================================================================
