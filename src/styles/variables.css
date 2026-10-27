@@ -10,15 +10,27 @@
   --navy-100: #e8f0fe;
   --navy-50: #f2f6ff;
 
-  /* Brand Industrial Gold / Amber Spectrum (Derived from PrimeSource corporate logo) */
-  --gold-700: #936009;
-  --gold-600: #ad7412;
-  --gold-500: #c49033;
-  --gold-400: #dea43e;
-  --gold-300: #eec068;
-  --gold-200: #f7da9b;
-  --gold-100: #fdf3dc;
-  --gold-50: #fffbf2;
+  /* Brand Industrial Orange Spectrum (Energetic, high-visibility engineering orange) */
+  --orange-800: #9a3412;
+  --orange-700: #c2410c;
+  --orange-600: #ea580c;
+  --orange-500: #f97316;
+  --orange-400: #fb923c;
+  --orange-300: #fdba74;
+  --orange-200: #fed7aa;
+  --orange-100: #ffedd5;
+  --orange-50: #fff7ed;
+
+  /* Aliases so all existing theme references inherit the vibrant industrial orange */
+  --gold-800: var(--orange-800);
+  --gold-700: var(--orange-700);
+  --gold-600: var(--orange-600);
+  --gold-500: var(--orange-500);
+  --gold-400: var(--orange-400);
+  --gold-300: var(--orange-300);
+  --gold-200: var(--orange-200);
+  --gold-100: var(--orange-100);
+  --gold-50: var(--orange-50);
 
   /* Industrial Slate Neutrals */
   --slate-900: #0f172a;
@@ -52,8 +64,9 @@
   --shadow-lg: 0 10px 15px -3px rgba(2, 11, 30, 0.1), 0 4px 6px -4px rgba(2, 11, 30, 0.08);
   --shadow-xl: 0 20px 25px -5px rgba(2, 11, 30, 0.12), 0 8px 10px -6px rgba(2, 11, 30, 0.08);
   --shadow-2xl: 0 25px 50px -12px rgba(2, 11, 30, 0.25);
-  --shadow-gold: 0 10px 25px -5px rgba(196, 144, 51, 0.28);
-  --shadow-glow: 0 0 30px rgba(196, 144, 51, 0.2);
+  --shadow-gold: 0 10px 25px -5px rgba(249, 115, 22, 0.32);
+  --shadow-glow: 0 0 30px rgba(249, 115, 22, 0.25);
+  --shadow-orange: 0 10px 25px -5px rgba(249, 115, 22, 0.32);
 
   /* Layout Constants */
   --container-max: 1240px;
